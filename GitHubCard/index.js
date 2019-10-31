@@ -3,6 +3,7 @@
            https://api.github.com/users/<your name>
 */
 
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -24,8 +25,6 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
-
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
 
@@ -45,6 +44,88 @@ const followersArray = [];
 </div>
 
 */
+
+
+function cardCreator(fArray){
+  
+  //definition
+
+  const aCard = document.createElement('div')
+  const image = document.createElement('img')
+  const cardInfo = document.createElement('div')
+  const theName = document.createElement('h3')
+  const theUsername = document.createElement('p')
+  const theLocation = document.createElement('p')
+  const theProfile = document.createElement('p')
+  const linkToProfile = document.createElement('a')
+  const followerCount = document.createElement('p')
+  const followingCount = document.createElement('p')
+  const userBio = document.createElement('p')
+
+  //class
+
+  
+  aCard.classList.add('card')
+  cardInfo.classList.add('card-info')
+  theUsername.classList.add('username') 
+  theName.classList.add('name')
+
+  //content
+  image.src = fArray.avatar_url
+  theName.textContent = fArray.name
+  theUsername.textContent = fArray.login
+  theLocation.textContent = `Location: ${fArray.location}`
+  theProfile.textContent = `Profile: `
+  linkToProfile.textContent = fArray.html_url
+  linkToProfile.href = fArray.html_url
+  
+  followerCount.textContent = `Followers Count: ${fArray.followers}`
+  followingCount.textContent = `Following Count: ${fArray.following}`
+  userBio.textContent = `Bio: ${fArray.bio}`
+
+  // structure
+  aCard.appendChild(image)
+  aCard.appendChild(cardInfo)
+  
+  cardInfo.appendChild(theName)
+  cardInfo.appendChild(theUsername)
+  cardInfo.appendChild(theLocation)
+  cardInfo.appendChild(theProfile)  
+  cardInfo.appendChild(followerCount)
+  cardInfo.appendChild(followingCount)
+  cardInfo.appendChild(userBio)
+  theProfile.appendChild(linkToProfile)
+
+  return aCard
+
+}
+
+axios.get('https://api.github.com/users/zimashima/')
+  .then(resp =>{
+    document.querySelector('.cards').appendChild(cardCreator(resp.data))
+  })
+  .catch(err=>{
+    console.log('ERROR!')
+  })
+
+
+  //stretch goal
+axios.get('https://api.github.com/users/zimashima/followers').then( response => {
+  response.data.forEach(follower=>{
+    axios.get(follower.url)
+      .then(res =>{
+        document.querySelector('.cards').appendChild(cardCreator(res.data))
+      })
+      .catch(err2 =>{
+        console.log('ERROR!')
+      })
+  })
+})
+
+
+
+
+
 
 /* List of LS Instructors Github username's: 
   tetondan
